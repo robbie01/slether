@@ -1,5 +1,7 @@
 TARGET_EXEC := slether
 
+CFLAGS := -std=c99 -Wall -Wextra -Werror -pedantic
+
 OBJS := slether.o hexdump.o
 
 $(TARGET_EXEC): $(OBJS)

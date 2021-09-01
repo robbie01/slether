@@ -123,11 +123,11 @@ movebuf:
 void tap_proc(int sp, int tap) {
 	unsigned char readbuf[BUFLEN];
 	ssize_t n = read(tap, readbuf, BUFLEN);
-	fprintf(stderr, "tap_proc: received frame on TAP, %d bytes\n", n);
+	fprintf(stderr, "tap_proc: received frame on TAP, %zd bytes\n", n);
 	hexdump(readbuf, n);
 	unsigned char writebuf[BUFLEN];
 	int k = 0;
-	writebuf[k++] = END; // send initial end as per RFC1055
+	writebuf[k++] = END; /* send initial end as per RFC1055 */
 	for (int i = 0; i < n; ++i) {
 		switch (readbuf[i]) {
 		case ESC:
@@ -151,7 +151,7 @@ void tap_proc(int sp, int tap) {
 	fprintf(stderr, "tap_proc: sent frame on serial, %d bytes+empty\n", k-1);
 }
 
-void main(void) {
+int main(void) {
 	int sp = serial_init(NULL);
 	int tap = open("/dev/tap", O_RDWR | O_NONBLOCK); /* future tap_init() */
 	int nfds = (sp > tap ? sp : tap) + 1;
@@ -173,4 +173,6 @@ void main(void) {
 		if (FD_ISSET(sp, &readfds)) serial_proc(sp, tap);
 		if (FD_ISSET(tap, &readfds)) tap_proc(sp, tap);
 	}
+
+	return 0;
 }

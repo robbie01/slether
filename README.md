@@ -11,7 +11,7 @@ easier just to write a TAP-based driver.
 
 ## What's the protocol?
 
-Ethernet frame encapsulated with SLIP, as specified in RFC 1055.
+Ethernet frame encapsulated with SLIP, as described in RFC 1055.
 
 ### Doesn't SLIP only apply to IP packets?
 

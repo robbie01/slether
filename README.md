@@ -21,4 +21,10 @@ It's basically just byte stuffing with a fancy name.
 
 This was written on and for NetBSD. I aim to make it compatible with Linux soon.
 
+## Licensing
+
+No licensing at this time. As this is an unfinished product with serious bugs and missing features, please do not redistribute.
+
+<hr>
+
 Copyright &copy; Robbie 2021

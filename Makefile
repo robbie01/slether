@@ -2,7 +2,8 @@ TARGET_EXEC := slether
 
 CFLAGS := -std=c99 -Wall -Wextra -Werror -pedantic
 
-OBJS := slether.o hexdump.o
+SRCS != find . -name \*.c
+OBJS := ${SRCS:%.c=%.o}
 
 $(TARGET_EXEC): $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)

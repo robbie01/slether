@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <err.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <termios.h>
@@ -21,11 +22,6 @@
 
 void hexdump(const void *buf, size_t n);
 
-void die(const char *string) {
-	perror(string);
-	exit(EXIT_FAILURE);
-}
-
 int serial_init(const char* dev) {
 	int sp;
 	if (!dev)
@@ -39,11 +35,11 @@ int serial_init(const char* dev) {
 	}
 
 	if (sp < 0) /* epic fail */
-		die("serial_init: open");
+		err(EXIT_FAILURE, "serial_init: open");
 
 	struct termios t;
 	if (tcgetattr(sp, &t) < 0) /* functions as tty check too */
-		die("serial_init: tcgetattr");
+		err(EXIT_FAILURE, "serial_init: tcgetattr");
 
 	cfmakeraw(&t);
 	t.c_cflag |=   CS8 /* | CRTSCTS */; /* ensure 8 bits */
@@ -52,7 +48,7 @@ int serial_init(const char* dev) {
 	                            (sorry your standards suck at serial) */
 
 	if (tcsetattr(sp, TCSANOW, &t) < 0) /* edge case, probably */
-		die("serial_init: tcsetattr");
+		err(EXIT_FAILURE, "serial_init: tcsetattr");
 
 	return sp;
 }
@@ -65,7 +61,7 @@ void serial_proc(int sp, int tap) {
 	while (i < BUFLEN && (n = read(sp, readbuf+i, BUFLEN-i)) > 0) i += n;
 
 	if (n < 0 && errno != EAGAIN)
-		die("serial_proc: read");
+		err(EXIT_FAILURE, "serial_proc: read");
 
 	int j = 0;
 	while (readbuf[j] != END && j < (i-1)) ++j;
@@ -107,7 +103,7 @@ void serial_proc(int sp, int tap) {
 
 	hexdump(writebuf, k);
 	if (write(tap, writebuf, k) < 0)
-		die("serial_proc: write");
+		err(EXIT_FAILURE, "serial_proc: write");
 	fprintf(stderr, "serial_proc: sent frame on TAP, %d bytes\n", k);
 
 movebuf:
@@ -140,7 +136,7 @@ void tap_proc(int sp, int tap) {
 	}
 	writebuf[k++] = END;
 	if (write(sp, writebuf, k) < 0)
-		die("tap_proc: write");
+		err(EXIT_FAILURE, "tap_proc: write");
 	fprintf(stderr, "tap_proc: sent frame on serial, %d bytes+empty\n", k-1);
 }
 
@@ -159,7 +155,7 @@ int main(void) {
 		FD_SET(tap, &readfds);
 
 		if (select(nfds, &readfds, &writefds, &exceptfds, NULL) < 0)
-			die("select");
+			err(EXIT_FAILURE, "select");
 
 		if (FD_ISSET(sp, &readfds)) serial_proc(sp, tap);
 		if (FD_ISSET(tap, &readfds)) tap_proc(sp, tap);

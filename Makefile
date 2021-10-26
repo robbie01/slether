@@ -1,18 +1,6 @@
-TARGET_EXEC := slether
+PROG= slether
+SRCS= slether.c hexdump.c
 
-CFLAGS := -std=c99 -Wall -Wextra -Werror -pedantic
+MAN=
 
-SRCS != find . -name \*.c
-OBJS := ${SRCS:%.c=%.o}
-
-$(TARGET_EXEC): $(OBJS)
-	$(CC) $(OBJS) -o $@ $(LDFLAGS)
-
-%.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
-
-.PHONY: clean
-
-clean:
-	-rm $(TARGET_EXEC) $(OBJS)
+.include <bsd.prog.mk>

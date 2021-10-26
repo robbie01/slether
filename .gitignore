@@ -1,2 +1,11 @@
-*.o
+a.out
+[Ee]rrs
+mklog
+core
+*.core
+.gdbinit
 slether
+slether.o
+hexdump.o
+slether.ln
+hexdump.ln

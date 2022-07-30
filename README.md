@@ -6,8 +6,11 @@ SLIP for Ethernet. We're a whole layer deeper now.
 
 I wanted to connect a device to a network through a serial line, and I wasn't
 satisfied with existing layer 3 options because I wanted it to receive router
-advertisements. Maybe PPP can be hacked to make this work, but it seemed
-easier just to write a TAP-based driver.
+advertisements. ~~Maybe PPP can be hacked to make this work, but it seemed
+easier just to write a TAP-based driver.~~ Just use PPP with EtherIP on NetBSD,
+or PPP with VXLAN on FreeBSD, OpenBSD, or Linux. I haven't tried it myself, but
+it should be a much more robust solution than hacking together a userspace
+driver.
 
 ## What's the protocol?
 
@@ -19,7 +22,7 @@ It's basically just byte stuffing with a fancy name.
 
 ## Supported platforms
 
-This was written on and for NetBSD. I aim to make it compatible with Linux soon.
+This was written on and for NetBSD, and almost certainly only supports NetBSD.
 
 ## Licensing
 
@@ -28,4 +31,4 @@ the terms of which are present in the `LICENSE` file of this repository.
 
 <hr>
 
-Copyright &copy; Robbie 2021
+Copyright &copy; Robbie 2021-2022
